@@ -1,0 +1,124 @@
+@misc{horror,
+  author = {N. Dershowitz},
+  title  = {SOFTWARE HORROR STORIES},
+  url    = {https://www.cs.tau.ac.il/~nachumd/verify/horror.html}
+} 
+
+@article{KleinN-TCS,
+  author  = {Gerwin Klein and Tobias Nipkow},
+  title   = {Verified Bytecode Verifiers},
+  journal = {TCS},
+  year    = 2003,
+  volume  = 298,
+  pages   = {583--626}
+}
+
+@article{KleinN-ACM,
+  author     = {Klein, Gerwin and Nipkow, Tobias},
+  title      = {A Machine-Checked Model for a Java-like Language, Virtual Machine, and Compiler},
+  year       = {2006},
+  issue_date = {July 2006},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {28},
+  number     = {4},
+  issn       = {0164-0925},
+  url        = {https://doi.org/10.1145/1146809.1146811},
+  doi        = {10.1145/1146809.1146811},
+  abstract   = {We introduce Jinja, a Java-like programming language with a formal semantics designed to exhibit core features of the Java language architecture. Jinja is a compromise between the realism of the language and the tractability and clarity of its formal semantics. The following aspects are formalised: a big and a small step operational semantics for Jinja and a proof of their equivalence, a type system and a definite initialisation analysis, a type safety proof of the small step semantics, a virtual machine (JVM), its operational semantics and its type system, a type safety proof for the JVM; a bytecode verifier, that is, a data flow analyser for the JVM, a correctness proof of the bytecode verifier with respect to the type system, and a compiler and a proof that it preserves semantics and well-typedness. The emphasis of this work is not on particular language features but on providing a unified model of the source language, the virtual machine, and the compiler. The whole development has been carried out in the theorem prover Isabelle/HOL.},
+  journal    = {ACM Trans. Program. Lang. Syst.},
+  month      = jul,
+  pages      = {619–695},
+  numpages   = {77},
+  keywords   = {Java, operational semantics, theorem proving}
+}
+
+@misc{Strecker_compilerverification,
+  author = {Martin Strecker},
+  title  = {Compiler Verification for C0 (intermediate report)},
+  year   = {}
+}
+
+@inproceedings{Leinenbach,
+  author    = {Leinenbach, Dirk and Paul, Wolfgang and Petrova, Elena},
+  title     = {Towards the Formal Verification of a C0 Compiler: Code Generation and Implementation Correctnes},
+  year      = {2005},
+  isbn      = {0769524354},
+  publisher = {IEEE Computer Society},
+  address   = {USA},
+  url       = {https://doi.org/10.1109/SEFM.2005.51},
+  doi       = {10.1109/SEFM.2005.51},
+  abstract  = {In the spirit of the famous CLI stack project [2] the Verisoft project [31] aims at the pervasive verification of entire computer systems including hardware, system software, compiler, and communicating applications, with a special focus on industrial applications. The main programming language used in the Verisoft project is C0 (a subset of C which is similar to MISRA C [20]). This paper reports on (i) an operational small steps semantics for C0 which is formalized in Isabelle/HOL [25], (ii) the formal specification of a compiler from C0 to the DLX machine language [14, 23] in Isabelle/HOL, (iii) a paper and pencil correctness proof for this compiler and the status of the formal verification effort for this proof, and (iv) the implementation of the compiler in C0 and a formal proof in Isabelle/HOL that the implementation produces the same code as the specification.},
+  booktitle = {Proceedings of the Third IEEE International Conference on Software Engineering and Formal Methods},
+  pages     = {2–12},
+  numpages  = {11},
+  series    = {SEFM '05}
+}
+
+@inproceedings{10.1145/1111037.1111042,
+  author    = {Leroy, Xavier},
+  title     = {Formal Certification of a Compiler Back-End or: Programming a Compiler with a Proof Assistant},
+  year      = {2006},
+  isbn      = {1595930272},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/1111037.1111042},
+  doi       = {10.1145/1111037.1111042},
+  abstract  = {This paper reports on the development and formal certification (proof of semantic preservation) of a compiler from Cminor (a C-like imperative language) to PowerPC assembly code, using the Coq proof assistant both for programming the compiler and for proving its correctness. Such a certified compiler is useful in the context of formal methods applied to the certification of critical software: the certification of the compiler guarantees that the safety properties proved on the source code hold for the executable compiled code as well.},
+  booktitle = {Conference Record of the 33rd ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+  pages     = {42–54},
+  numpages  = {13},
+  keywords  = {semantic preservation, certified compilation, the Coq theorem prover, program proof, compiler transformations and optimizations},
+  location  = {Charleston, South Carolina, USA},
+  series    = {POPL '06}
+}
+
+@article{Xavier,
+  author     = {Leroy, Xavier},
+  title      = {Formal Certification of a Compiler Back-End or: Programming a Compiler with a Proof Assistant},
+  year       = {2006},
+  issue_date = {January 2006},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {41},
+  number     = {1},
+  issn       = {0362-1340},
+  url        = {https://doi.org/10.1145/1111320.1111042},
+  doi        = {10.1145/1111320.1111042},
+  abstract   = {This paper reports on the development and formal certification (proof of semantic preservation) of a compiler from Cminor (a C-like imperative language) to PowerPC assembly code, using the Coq proof assistant both for programming the compiler and for proving its correctness. Such a certified compiler is useful in the context of formal methods applied to the certification of critical software: the certification of the compiler guarantees that the safety properties proved on the source code hold for the executable compiled code as well.},
+  journal    = {SIGPLAN Not.},
+  month      = jan,
+  pages      = {42–54},
+  numpages   = {13},
+  keywords   = {program proof, the Coq theorem prover, certified compilation, semantic preservation, compiler transformations and optimizations}
+}
+
+@misc{CompCert,
+  author = {Xavier Leroy et al.},
+  title  = { The CompCert verified compiler.},
+  url    = {http://compcert.inria.fr/}
+}
+
+@misc{sergey2018scilla,
+  title         = {Scilla: a Smart Contract Intermediate-Level LAnguage},
+  author        = {Ilya Sergey and Amrit Kumar and Aquinas Hobor},
+  year          = {2018},
+  eprint        = {1801.00687},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.PL}
+}
+
+@inproceedings{base_article,
+  author    = {Gu{\'e}neau, Arma{\"e}l
+and Chargu{\'e}raud, Arthur
+and Pottier, Fran{\c{c}}ois},
+  editor    = {Ahmed, Amal},
+  title     = {A Fistful of Dollars: Formalizing Asymptotic Complexity Claims via Deductive Program Verification},
+  booktitle = {Programming Languages and Systems},
+  year      = {2018},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  pages     = {533--560},
+  abstract  = {We present a framework for simultaneously verifying the functional correctness and the worst-case asymptotic time complexity of higher-order imperative programs. We build on top of Separation Logic with Time Credits, embedded in an interactive proof assistant. We formalize the O notation, which is key to enabling modular specifications and proofs. We cover the subtleties of the multivariate case, where the complexity of a program fragment depends on multiple parameters. We propose a way of integrating complexity bounds into specifications, present lemmas and tactics that support a natural reasoning style, and illustrate their use with a collection of examples.},
+  isbn      = {978-3-319-89884-1}
+}
