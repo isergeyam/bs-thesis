@@ -4,9 +4,17 @@
 \usepackage{hyperref}
 \usepackage{minted}
 \usepackage{float}
+\usepackage{textgreek}
+\usepackage{mathtools}
 \usemintedstyle{tango}
 \addbibresource{diploma.bib}
 
+\newcommand*\numeral[1]{\underline{#1}}
+\newcommand*\combinator[1]{\boldsymbol{\operatorname{\MakeUppercase{#1}}}}
+\newcommand{\rr}{\rightarrow}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\NN}{\mathbb{N}}
 
 
 \title{Формальная верификация программ и их асимптотик}
@@ -19,6 +27,23 @@
 
 \begin{document}
 
+\newtheorem{lemma}{Лемма}[section]
+\newtheorem{corollary}{Следствие}[section]
+\newtheorem{proposition}{Утверждение}[section]
+\newtheorem{remark}{Замечание}[section]
+\newtheorem{fact}{Факт}[section]
+\newtheorem{example}{Пример}[section]
+\newtheorem{definition}{Определение}[section]
+
+\newtheoremstyle{break}
+{\topsep}{\topsep}%
+{\itshape}{}%
+{\bfseries}{}%
+{\newline}{}%
+\theoremstyle{break}
+\newtheorem{theorem}{Теорема}[section]
+
+
 \frontmatter
 \titlecontents
 
@@ -27,6 +52,9 @@
 
 \chapter{Введение}
 \input{introduction}
+
+\chapter{Теоретические сведения}
+\input{theory}
 
 
 \backmatter
