@@ -1,0 +1,173 @@
+В этой главе мы изложим полученный результат, состоящий в верификации алгоритма LCS.
+\section{Реализация алгоритма}
+Начнем изложение с представления реализации самого алгоритма. Ввиду использования фреймворка CFML \cite{base_article},
+алгоритм реализован на языке OCaml \cite{ocaml}.
+
+\begin{figure}[H]
+  \caption{Реализация LCS}
+  \label{code:lcs_impl}
+  \begin{minted}{ocaml}
+let lcs (a : int array) (b : int array) : int array =
+  let n = Array.length a in
+  let m = Array.length b in
+  let c = Array.make ((n+1)*(m+1)) [] in
+  for i = 1 to n do
+    for j = 1 to m do
+      if a.(i-1) = b.(j-1)
+      then c.(i*(m+1) + j) <- List.append c.((i-1)*(m+1) + j - 1) [a.(i-1)]
+      else if List.length c.((i-1)*(m+1) + j) > List.length c.(i*(m+1) + j - 1)
+        then c.(i*(m+1) + j) <- c.((i-1)*(m+1) + j)
+        else c.(i*(m+1) + j) <- c.(i*(m+1) + j - 1)
+      done
+    done; 
+  Array.of_list c.((n+1)*(m+1)-1);;
+\end{minted}
+\end{figure}
+
+Здесь приведена реализация классического алгоритма LCS, в котором с помощью динамического программирования вычисляется массив
+$c[i][j]$, который содержит $LCS(A_i, B_j)$, где $A_i = a_1 \ldots a_i$, $B_j = b_1 \ldots b_j$.
+Формула для вычисления $LCS(A_i, B_j)$ из предыдущих значений следующая:
+
+$$
+  L C S\left(A_{i}, B_{j}\right)=\left\{\begin{array}{ll}
+    \emptyset                                                                              & \text { if } i=0 \text { or } j=0                    \\
+    L C S\left(A_{i-1}, B_{j-1}\right) x_{i}                                               & \text { if } i, j>0 \text { and } a_{i}=b_{j}        \\
+    \max \left\{L C S\left(A_{i}, B_{j-1}\right), L C S\left(A_{i-1}, B_{j}\right)\right\} & \text { if } i, j>0 \text { and } a_{i} \neq b_{j} .
+  \end{array}\right.
+$$
+
+Но стоит отметить, что вместо двумерного массива $c$ используется одномерных массив размера $|a| \times |b|$. Это сделано из-за того,
+что в оригинальной своей версии CFML \cite{base_article}, в языке пропозициональных высказываний о куче (тип \textbf{hprop})
+не поддерживается квантора всеобщности, а только квантор существования (\textbf{\textbackslash HExists}). В случае двумерного массива
+квантов всеобщности необходим для построения утвержений инварианте цикла.
+Добавления квантора всеобщности в эту систему является не такой простой задачей, как может показаться на первый взгляд, поэтому
+был использован одномерный массив.
+
+\section{Формализация утверждений об Lcs}
+Для того, чтобы сформулировать теорему об корректности работы и асимптотики алгоритма LCS, описанного выше, кроме инструментария
+CFML, также необходима и некая формализация в Coq самого понятия LCS. Делается это с помощью так называемых индуктивных высказываний.
+Определим сначала высказывание подпоследовательность, то есть $\text{SubSeq}\ l_1\ l_2$ означает, что $l_1$ является подпоследовательностью
+$l_2$. Это утверждение формализуется следующим способом:
+
+
+\begin{figure}[H]
+  \caption{Определение SubSeq}
+  \label{code:subseq_prop}
+  \begin{minted}{coq}
+Inductive SubSeq {A:Type} : list A -> list A -> Prop :=
+ | SubNil (l:list A) : SubSeq nil l
+ | SubCons1 (x:A) (l1 l2:list A) (H: SubSeq l1 l2) : SubSeq l1 (x::l2)
+ | SubCons2 (x:A) (l1 l2:list A) (H: SubSeq l1 l2) : SubSeq (x::l1) (x::l2).
+  \end{minted}
+\end{figure}
+
+Теперь мы также можем определить утверждение $\text{Lcs}\ l\ l_1\ l_2$, которое будет означать, что $l$ является наибольшей
+общей подпоследовательностью $l_1$ и $l_2$:
+
+\begin{figure}[H]
+  \caption{Определение Lcs}
+  \label{code:lcs_prop}
+  \begin{minted}{coq}
+Definition Lcs {A: Type} l l1 l2 :=
+  SubSeq l l1 /\ SubSeq l l2 /\ 
+  (forall l': list A, SubSeq l' l1 /\ SubSeq l' l2 -> length l' <= length l). 
+  \end{minted}
+\end{figure}
+
+В этом утверждении просто проверяется, что во-первых $l$ и вправду является подпоследовательностью $l_1$ и $l_2$, а также то,
+что любая другая их общая подпоследовательность $l'$ имеет длину, не большую $l$. Далее, для доказательства корректности работы
+алгоритма, нужно будет убедиться в правильности построения $LCS(A_i, B_j)$. Вспомним правило построения:
+
+$$
+  L C S\left(A_{i}, B_{j}\right)=\left\{\begin{array}{ll}
+    \emptyset                                                                              & \text { if } i=0 \text { or } j=0                    \\
+    L C S\left(A_{i-1}, B_{j-1}\right) x_{i}                                               & \text { if } i, j>0 \text { and } a_{i}=b_{j}        \\
+    \max \left\{L C S\left(A_{i}, B_{j-1}\right), L C S\left(A_{i-1}, B_{j}\right)\right\} & \text { if } i, j>0 \text { and } a_{i} \neq b_{j} .
+  \end{array}\right.
+$$
+
+По большому счету, нам просто нужно доказать два утверждения об Lcs, в зависимости от равенства последних символов строк. Эти утверждения
+формализуются следующим способом:
+\begin{figure}[H]
+  \caption{Необходимые свойства Lcs}
+  \label{code:lcs_main_lemma}
+  \begin{minted}{coq}
+Lemma lcs_app_eq: forall (l1 l2 l: list int) (x: int),
+  Lcs l l1 l2 -> Lcs (l & x) (l1 & x) (l2 & x). 
+
+Lemma lcs_app_neq: forall (l1 l2 l l': list int) (x y : int),
+  x <> y -> Lcs l (l1&x) l2 -> Lcs l' l1 (l2&y) -> length l' <= length l ->
+  Lcs l (l1&x) (l2&y). 
+  \end{minted}
+\end{figure}
+Для доказательства этих основных утверждений об Lcs, были использованы следующие вспомогательные леммы, устанавливающие свойства
+SubSeq и Lcs:
+\begin{figure}[H]
+  \caption{Вспомогательные утверждения}
+  \label{code:lcs_other_lemma}
+  \begin{minted}{coq}
+Lemma subseq_cons: forall A l1 l2 (x : A), SubSeq (x::l1) l2 -> SubSeq l1 l2. 
+
+Lemma subseq_app: forall A l1 l2 (x : A), SubSeq l1 l2 -> SubSeq (l1 & x) (l2 & x). 
+
+Lemma subseq_nil: forall A (l : list A), SubSeq l nil -> l = nil. 
+
+Lemma subseq_length: forall (l a: list int), SubSeq l a -> length l <= length a. 
+
+Lemma subseq_cons_l: forall A l1 l2 (x : A),  SubSeq (x :: l1) l2 <-> 
+  exists l2' l2'', l2 = l2' & x ++ l2'' /\ SubSeq l1 l2''. 
+
+Lemma subseq_last_head: forall l1 l2 (x y : int), 
+  SubSeq (l1 & x) (l2 & y) -> SubSeq l1 l2. 
+
+Lemma subseq_app_r: forall (l l1 l2: list int), SubSeq l l1 -> SubSeq l (l1 ++ l2). 
+
+Lemma subseq_last_case: forall l l1 (x : int), SubSeq l (l1 & x) ->
+  (SubSeq l l1) \/ (exists l', l = l' & x /\ (SubSeq l' l1)). 
+
+Lemma subseq_last_case: forall l l1 (x : int), SubSeq l (l1 & x) ->
+  (SubSeq l l1) \/ (exists l', l = l' & x /\ (SubSeq l' l1)). 
+
+Lemma subseq_last_neq: forall l l1 l2 (x y : int), x <> y -> SubSeq l (l1 & x) -> 
+  SubSeq l (l2 & y) -> (SubSeq l l1) \/ (SubSeq l l2). 
+
+Lemma lcs_nil_nil: forall A (l: list A), Lcs nil nil l. 
+
+Lemma lcs_symm: forall A (l l1 l2 : list A), Lcs l l1 l2 <-> Lcs l l2 l1. 
+  \end{minted}
+\end{figure}
+
+\section{Формулировка основной теоремы}
+Теперь мы практически готовы сформулировать основную теорему. Осталось только задать отношение на фильтре, т.к. для формулировки
+нам нужен фильтр над $\ZZ^2$. Нам необходим стандартный фильтр на $\mathbb{Z}^2$, получающийся как произведение двух
+стандартных фильров над $\ZZ$:
+
+\begin{figure}[H]
+  \caption{Определение фильтра}
+  \label{code:filter_definition}
+  \begin{minted}{coq}
+Definition ZZle (p1 p2 : Z * Z) :=
+  let (x1, y1) := p1 in
+  let (x2, y2) := p2 in
+  1 <= x1 <= x2 /\ 0 <= y1 <= y2.
+  \end{minted}
+\end{figure}
+
+Теперь, можно сформулировать основную теорему:
+\begin{figure}[H]
+  \caption{Формулировка основной теоремы}
+  \label{code:main_result_definition}
+  \begin{minted}{coq}
+Lemma lcs_spec:
+  specO
+    (product_filterType Z_filterType Z_filterType)
+    ZZle
+  ( fun cost =>
+  forall (l1 l2 : list int) p1 p2,
+  app lcs [p1 p2]
+  PRE (\$(cost (LibListZ.length l1, LibListZ.length l2)) \*
+  p1 ~> Array l1 \* p2 ~> Array l2)
+  POST (fun p => Hexists (l : list int), p ~> Array l \* \[Lcs l l1 l2]))
+  (fun '(n,m) => n * m).
+  \end{minted}
+\end{figure}
