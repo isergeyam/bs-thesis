@@ -230,12 +230,38 @@ Lemma lcs_spec:
 \subsection{Доказательство асимптотической корректности}
 Как было изложено раньше, фреймворк CFML \cite{base_article} позволяет нам построить функцию стоимости алгоритма в процессе
 доказательства алгоритмической корректности. После этого, нам нужно показать, что полученная функция является монотонной, а
-также проверить, что она доминируется заявленной функцией, то есть в нашем случае функцией $f(n,m) = nm$. После доказательство
+также проверить, что она доминируется заявленной функцией, то есть в нашем случае функцией $f(n,m) = nm$. В процессе доказательства
 корректности генерируется следующая функция стоимости:
 
 \begin{figure}[H]
   \caption{Функция стоимости}
   \label{code:cost_function}
+  \begin{minted}[]{coq}
+    fun '(x, y) =>
+         (1 +
+          (1 +
+           (1 +
+            ((((x + 1)%I * (y + 1)%I)%I + 1)%I +
+             (cumul 1 (x + 1)
+                (fun _ : int =>
+                 1 +
+                 cumul 1 (y + 1)
+                   (fun _ : int =>
+                    1 +
+                    (1 +
+                     (1 +
+                      (0 +
+                       Z.max (1 + (1 + (0 + 1)%I)%I)
+                         (1 + (0 + (1 + (0 + Z.max (1 + 1) (1 + 1))%I)%I)%I))%I)%I)%I)) +
+              (1 + 1)%I)%I)%I)%I)%I)%I
+  \end{minted}
+\end{figure}
+
+Это выражение можно сильно упростить, если заметить, что в аргументе cumul стоит константная функция. После упрощения получаем:
+
+\begin{figure}[H]
+  \caption{Упрощенная функция стоимости}
+  \label{code:simplified_cost_function}
   \begin{minted}[]{coq}
   (fun '(x, y) =>
    (((((x * y)%I + x)%I + y)%I +
@@ -248,4 +274,43 @@ Lemma lcs_spec:
 \end{figure}
 
 Из ее вида уже сразу видно, что она монотонна, и доминируется. Монотонность проверяется непосредственно тактикой \textcolor{blue}{math\_nia}.
-Для проверки доминирования
+Для проверки того, что она доминируется функцией $f(n, m) = n*m$, мы для начала раскладываем нашу функцию на слагаемые, и показываем,
+что каждое из них доминируется. Разложение на слагаемые делается с помощью дистрибутивности по сложению, то есть утверждения:
+$f_1 = \OO(g) \land f_2 = \OO(g) \implies f_1 + f_2 = \OO(g)$, которое формализуется следующим образом:
+
+
+\begin{figure}[H]
+  \caption{Дистрибутивность доминирования по сложению}
+  \label{code:dominated_sum_distr_nary}
+  \begin{minted}[]{coq}
+    Theorem dominated_sum_distr_nary
+    : forall (domain : list Type) (M : Filter.mixin_of (Rtuple domain))
+          (f g h : Rarrow domain int),
+        dominated (nFilterType domain M) (Uncurry f) (Uncurry h) ->
+        dominated (nFilterType domain M) (Uncurry g) (Uncurry h) ->
+        dominated (nFilterType domain M)
+          (Fun' (fun p : Rtuple domain => (App f p + App g p)%I)) 
+          (Uncurry h)
+  \end{minted}
+\end{figure}
+После разложения на слагаемые получаются довольно простые функции, доминируемость которых мы показываем с помощью дистрибутивности
+доминирования умножению, то есть утверждения о том, что \\
+$f_1 = \OO(g_1) \land f_2 = \OO(g_2) \implies f_1f_2 = \OO(g_1g_2)$, которое формально выглядит так:
+
+\begin{figure}[H]
+  \caption{Дистрибутивность доминирования по умножению}
+  \label{code:dominated_mul_nary}
+  \begin{minted}[]{coq}
+    Theorem dominated_mul_nary
+	 : forall (domain : list Type) (M : Filter.mixin_of (Rtuple domain))
+         (f1 f2 g1 g2 : Rarrow domain int),
+       dominated (nFilterType domain M) (Uncurry f1) (Uncurry g1) ->
+       dominated (nFilterType domain M) (Uncurry f2) (Uncurry g2) ->
+       dominated (nFilterType domain M)
+         (Fun' (fun p : Rtuple domain => (App f1 p * App f2 p)%I))
+         (Fun' (fun p : Rtuple domain => (App g1 p * App g2 p)%I))
+  \end{minted}
+\end{figure}
+
+С помощью этих утверждений, а также некоторых утверждений о свойствах фильтров, мы завершаем доказательство.
+С полной формализацие результата можно ознакомиться в приложении, а также в репозитории \cite{Grigoryants2021}.

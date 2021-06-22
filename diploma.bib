@@ -256,9 +256,56 @@ and Pottier, Fran{\c{c}}ois},
 }
 
 @article{ocaml,
-  title={The OCaml system: Documentation and user’s manual},
-  author={Leroy, Xavier and Doligez, Damien and Frisch, Alain and Garrigue, Jacques and R{\'e}my, Didier and Vouillon, J{\'e}r{\^o}me},
-  journal={INRIA},
-  volume={3},
-  pages={42}
+  title   = {The OCaml system: Documentation and user’s manual},
+  author  = {Leroy, Xavier and Doligez, Damien and Frisch, Alain and Garrigue, Jacques and R{\'e}my, Didier and Vouillon, J{\'e}r{\^o}me},
+  journal = {INRIA},
+  volume  = {3},
+  pages   = {42}
+}
+
+@article{AUDEBAUD2009568,
+  title    = {Proofs of randomized algorithms in Coq},
+  journal  = {Science of Computer Programming},
+  volume   = {74},
+  number   = {8},
+  pages    = {568-589},
+  year     = {2009},
+  note     = {Special Issue on Mathematics of Program Construction (MPC 2006)},
+  issn     = {0167-6423},
+  doi      = {https://doi.org/10.1016/j.scico.2007.09.002},
+  url      = {https://www.sciencedirect.com/science/article/pii/S0167642309000240},
+  author   = {Philippe Audebaud and Christine Paulin-Mohring},
+  keywords = {Randomized algorithms, Proof of partial and total correctness, Functional language, Axiomatic semantics, Probability framing, Call-by-value, Monadic interpretation},
+  abstract = {Randomized algorithms are widely used for finding efficiently approximated solutions to complex problems, for instance primality testing and for obtaining good average behavior. Proving properties of such algorithms requires subtle reasoning both on algorithmic and probabilistic aspects of programs. Thus, providing tools for the mechanization of reasoning is an important issue. This paper presents a new method for proving properties of randomized algorithms in a proof assistant based on higher-order logic. It is based on the monadic interpretation of randomized programs as probabilistic distributions (Giry, Ramsey and Pfeffer). It does not require the definition of an operational semantics for the language nor the development of a complex formalization of measure theory. Instead it uses functional and algebraic properties of unit interval. Using this model, we show the validity of general rules for estimating the probability for a randomized algorithm to satisfy specified properties. This approach addresses only discrete distributions and gives rules for analyzing general recursive functions. We apply this theory to the formal proof of a program implementing a Bernoulli distribution from a coin flip and to the (partial) termination of several programs. All the theories and results presented in this paper have been fully formalized and proved in the Coq proof assistant.}
+}
+
+@phdthesis{tassarotti2017verifying,
+  title  = {Verifying concurrent randomized algorithms},
+  author = {Tassarotti, Joseph},
+  year   = {2017},
+  school = {Carnegie Mellon University Pittsburgh, PA}
+}
+
+@inproceedings{10.1007/978-3-319-46750-4_5,
+  author    = {Fontaine, Allyx
+and Zemmari, Akka},
+  editor    = {Sampaio, Augusto
+and Wang, Farn},
+  title     = {Certified Impossibility Results and Analyses in Coq of Some Randomised Distributed Algorithms},
+  booktitle = {Theoretical Aspects of Computing -- ICTAC 2016},
+  year      = {2016},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  pages     = {69--81},
+  abstract  = {Randomised algorithms are generally simple to formulate. However, their analysis can become very complex, especially in the field of distributed computing. In this paper, we formally model in Coq a class of randomised distributed algorithms. We develop some tools to help proving impossibility results about classical problems and analysing this class of algorithms. As case studies, we examine the handshake and maximal matching problems. We show how to use our tools to formally prove properties about algorithms solving those problems.},
+  isbn      = {978-3-319-46750-4}
+}
+
+@misc{Grigoryants2021,
+  author       = {Grigoryants, Sergey},
+  title        = {LCS algorithm formal verification},
+  year         = {2021},
+  publisher    = {GitHub},
+  journal      = {GitHub repository},
+  howpublished = {\url{https://github.com/isergeyam/coq-bigO/blob/main/examples/proofs/Lcs_flat_proof.v}}
 }
